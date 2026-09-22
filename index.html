@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管俊宇 · 个人简历</title>
+<style>
+  :root {
+    --primary: #1e3a8a;
+    --primary-light: #3b82f6;
+    --accent: #06b6d4;
+    --accent-2: #8b5cf6;
+    --bg: #f1f5f9;
+    --bg-deep: #0f172a;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+    --radius: 16px;
+    --grad: linear-gradient(135deg, #1e3a8a 0%, #2563eb 45%, #06b6d4 100%);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  ::selection { background: rgba(59,130,246,.25); }
+
+  /* ===== 顶部导航 ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 60px;
+    background: rgba(15,23,42,.88); backdrop-filter: blur(12px);
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+  .nav-brand {
+    color: #fff; font-weight: 700; font-size: 18px; letter-spacing: 1px;
+  }
+  .nav-brand span { color: var(--accent); }
+  .nav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+  .nav-links a {
+    color: #cbd5e1; text-decoration: none; font-size: 14px;
+    padding: 8px 14px; border-radius: 999px; transition: all .25s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(59,130,246,.3); }
+  .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; }
+
+  /* ===== Hero ===== */
+  .hero {
+    position: relative; min-height: 100vh; display: flex; align-items: center;
+    justify-content: center; text-align: center; color: #fff;
+    background: var(--bg-deep); overflow: hidden; padding: 100px 5vw 60px;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 20%, rgba(59,130,246,.35), transparent 55%),
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,.3), transparent 55%);
+    animation: bgFloat 12s ease-in-out infinite alternate;
+  }
+  @keyframes bgFloat { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-24px) scale(1.04); } }
+  .hero-inner { position: relative; z-index: 2; animation: fadeUp 1s ease both; }
+  .avatar {
+    width: 130px; height: 130px; margin: 0 auto 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 54px; font-weight: 800; color: #fff;
+    background: var(--grad); border: 4px solid rgba(255,255,255,.35);
+    box-shadow: 0 0 60px rgba(59,130,246,.6);
+    animation: floatY 4s ease-in-out infinite;
+  }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .hero h1 { font-size: clamp(36px, 6vw, 56px); font-weight: 800; letter-spacing: 2px; }
+  .hero .subtitle { font-size: 18px; color: #94a3b8; margin-top: 8px; letter-spacing: 3px; }
+  .hero .tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+  .hero .tags span {
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+    padding: 6px 18px; border-radius: 999px; font-size: 14px; backdrop-filter: blur(4px);
+  }
+  .hero .cta { margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    padding: 12px 28px; border-radius: 999px; font-size: 15px; font-weight: 600;
+    transition: all .3s; border: none; cursor: pointer;
+  }
+  .btn-primary { background: var(--grad); color: #fff; box-shadow: 0 8px 24px rgba(59,130,246,.4); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(59,130,246,.55); }
+  .btn-ghost { background: transparent; color: #e2e8f0; border: 1.5px solid rgba(255,255,255,.35); }
+  .btn-ghost:hover { background: rgba(255,255,255,.1); transform: translateY(-3px); }
+  .scroll-hint {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    color: #94a3b8; font-size: 13px; letter-spacing: 2px; animation: bounce 2s infinite;
+  }
+  @keyframes bounce { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,10px); } }
+
+  /* ===== 通用布局 ===== */
+  .section { max-width: 1100px; margin: 0 auto; padding: 80px 5vw; }
+  .section-title {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 40px;
+    font-size: 30px; font-weight: 800; color: var(--text);
+  }
+  .section-title::after { content: ""; flex: 1; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+  .section-title .icon {
+    width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px;
+    background: var(--grad); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 18px rgba(59,130,246,.35);
+  }
+  .section-title .icon svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .card {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 28px; border: 1px solid var(--border); transition: transform .3s, box-shadow .3s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(15,23,42,.12); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* ===== 折叠/展开 ===== */
+  details { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; overflow: hidden; transition: box-shadow .3s; }
+  details:hover { box-shadow: var(--shadow); }
+  details summary {
+    cursor: pointer; list-style: none; padding: 18px 22px; font-weight: 700; font-size: 16px;
+    display: flex; align-items: center; gap: 12px; position: relative; user-select: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after {
+    content: "+"; position: absolute; right: 22px; font-size: 22px; font-weight: 400;
+    color: var(--primary-light); transition: transform .3s;
+  }
+  details[open] summary::after { transform: rotate(45deg); }
+  details .d-body { padding: 4px 22px 20px; color: var(--text-light); font-size: 14.5px; }
+  .d-tag {
+    display: inline-block; background: rgba(6,182,212,.12); color: #0e7490;
+    font-size: 12.5px; font-weight: 600; padding: 2px 12px; border-radius: 999px; margin-right: 8px;
+  }
+
+  /* ===== 标签页 ===== */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
+  .tab-btn {
+    padding: 9px 22px; border-radius: 999px; border: 1.5px solid var(--border);
+    background: var(--card); color: var(--text-light); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .3s;
+  }
+  .tab-btn:hover { border-color: var(--primary-light); color: var(--primary-light); }
+  .tab-btn.active { background: var(--grad); color: #fff; border-color: transparent; box-shadow: 0 6px 18px rgba(59,130,246,.35); }
+  .tab-panel { display: none; animation: fadeUp .5s ease both; }
+  .tab-panel.active { display: block; }
+
+  /* ===== 统计卡片 ===== */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+  .stat {
+    background: var(--bg-deep); color: #fff; border-radius: var(--radius); padding: 26px 20px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .stat::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(59,130,246,.25), transparent 60%); }
+  .stat .num { font-size: 38px; font-weight: 800; background: linear-gradient(90deg, #60a5fa, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat .label { font-size: 13.5px; color: #94a3b8; margin-top: 4px; }
+
+  /* ===== 技能条 ===== */
+  .skill-row { margin-bottom: 16px; }
+  .skill-row .top { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .skill-bar { height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+  .skill-bar .fill { height: 100%; width: 0; border-radius: 999px; background: var(--grad); transition: width 1.2s ease; }
+
+  /* ===== 时间线 ===== */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ""; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 3px; background: linear-gradient(180deg, var(--primary-light), var(--accent)); border-radius: 2px; }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-item::before {
+    content: ""; position: absolute; left: -28px; top: 6px; width: 15px; height: 15px;
+    border-radius: 50%; background: #fff; border: 4px solid var(--primary-light); box-sizing: border-box;
+  }
+  .tl-item h3 { font-size: 17px; margin-bottom: 4px; }
+  .tl-item .meta { font-size: 13px; color: var(--primary-light); font-weight: 600; margin-bottom: 8px; }
+  .tl-item p { color: var(--text-light); font-size: 14.5px; }
+
+  /* ===== 荣誉/徽章 ===== */
+  .award { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; transition: all .3s; }
+  .award:hover { transform: translateX(6px); border-color: var(--primary-light); }
+  .award .medal {
+    width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; font-weight: 700;
+  }
+  .award .medal.gold { background: linear-gradient(135deg,#f59e0b,#fbbf24); }
+  .award .medal.silver { background: linear-gradient(135deg,#64748b,#94a3b8); }
+  .award .medal.blue { background: linear-gradient(135deg,#2563eb,#3b82f6); }
+  .award .medal.cyan { background: linear-gradient(135deg,#0891b2,#22d3ee); }
+  .award .txt { font-size: 14.5px; font-weight: 600; color: var(--text); }
+
+  /* ===== 联系 ===== */
+  .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+  .contact-item {
+    display: flex; align-items: center; gap: 14px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; text-decoration: none;
+    color: var(--text); transition: all .3s;
+  }
+  .contact-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--primary-light); }
+  .contact-item .c-icon {
+    width: 44px; height: 44px; border-radius: 12px; background: rgba(59,130,246,.1);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .contact-item .c-icon svg { width: 22px; height: 22px; fill: none; stroke: var(--primary-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .contact-item .c-label { font-size: 12px; color: var(--text-light); }
+  .contact-item .c-value { font-size: 15px; font-weight: 700; word-break: break-all; }
+
+  /* ===== 动画 ===== */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .delay-1 { transition-delay: .1s; } .delay-2 { transition-delay: .2s; } .delay-3 { transition-delay: .3s; }
+
+  footer { background: var(--bg-deep); color: #94a3b8; text-align: center; padding: 36px 5vw; font-size: 13.5px; }
+  #backTop {
+    position: fixed; right: 28px; bottom: 28px; width: 46px; height: 46px; border-radius: 50%;
+    background: var(--grad); color: #fff; border: none; font-size: 20px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(59,130,246,.4); opacity: 0; pointer-events: none; transition: all .3s; z-index: 99;
+  }
+  #backTop.show { opacity: 1; pointer-events: auto; }
+  #backTop:hover { transform: translateY(-4px); }
+
+  /* 简历高亮徽章 */
+  .badge-inline { display: inline-block; background: rgba(6,182,212,.12); color: #0e7490; font-size: 12.5px; font-weight: 600; padding: 2px 10px; border-radius: 999px; margin: 2px 4px 2px 0; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: rgba(15,23,42,.97); flex-direction: column; padding: 16px 5vw; gap: 2px; }
+    .nav-links.open { display: flex; }
+    .nav-toggle { display: block; }
+    .section { padding: 60px 6vw; }
+  }
+  @media print {
+    nav, #backTop, .scroll-hint, .btn, .tabs { display: none !important; }
+    .hero { min-height: auto; padding: 60px 5vw; }
+    body { background: #fff; }
+    .card, .award, details { box-shadow: none; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 导航 ===== -->
+<nav id="nav">
+  <div class="nav-brand">管<span>俊宇</span></div>
+  <button class="nav-toggle" onclick="toggleNav()" aria-label="菜单">☰</button>
+  <div class="nav-links" id="navLinks">
+    <a href="#home" class="active">首页</a>
+    <a href="#about">个人简介</a>
+    <a href="#education">教育背景</a>
+    <a href="#projects">项目经验</a>
+    <a href="#awards">荣誉奖励</a>
+    <a href="#leadership">学生工作</a>
+    <a href="#public">公益实践</a>
+    <a href="#skills">技能特长</a>
+    <a href="#contact">联系方式</a>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<header class="hero" id="home">
+  <div class="hero-inner">
+    <div class="avatar">管</div>
+    <h1>管俊宇</h1>
+    <p class="subtitle">智能科学与技术 · 2027届本科毕业生</p>
+    <div class="tags">
+      <span>🏆 数学建模竞赛一等奖</span>
+      <span>🛠 全栈项目实践</span>
+      <span>🤝 学生工作骨干</span>
+      <span>❤️ 志愿服务 154h+</span>
+    </div>
+    <div class="cta">
+      <a href="#about" class="btn btn-primary">了解我的经历</a>
+      <a href="#contact" class="btn btn-ghost">联系我</a>
+    </div>
+  </div>
+  <div class="scroll-hint">向下滚动探索</div>
+</header>
+
+<!-- ===== 个人简介 ===== -->
+<section class="section" id="about">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>个人简介</h2>
+  <div class="grid-2">
+    <div class="card reveal">
+      <h3 style="margin-bottom:14px;">基本信息</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:14.5px;">
+        <tr><td style="padding:8px 0; color:var(--text-light); width:110px;">姓名</td><td style="padding:8px 0; font-weight:700;">管俊宇</td></tr>
+        <tr><td style="padding:8px 0; color:var(--text-light);">出生年月</td><td style="padding:8px 0;">2005.06</td></tr>
+        <tr><td style="padding:8px 0; color:var(--text-light);">现居</td><td style="padding:8px 0;">山东省潍坊市</td></tr>
+        <tr><td style="padding:8px 0; color:var(--text-light);">学历</td><td style="padding:8px 0;">本科在读（2027届）</td></tr>
+        <tr><td style="padding:8px 0; color:var(--text-light);">政治面貌</td><td style="padding:8px 0;">共青团员</td></tr>
+        <tr><td style="padding:8px 0; color:var(--text-light);">毕业院校</td><td style="padding:8px 0; font-weight:600;">东北电力大学</td></tr>
+      </table>
+    </div>
+    <div class="card reveal delay-1">
+      <h3 style="margin-bottom:14px;">自我评价</h3>
+      <p style="color:var(--text-light); font-size:14.5px;">
+        本人性格热情开朗，善于交际。学习刻苦认真，成绩优秀，品学兼优，获得各类奖助学金总计<strong style="color:var(--primary-light);">2万余元</strong>。
+        为人诚恳、勤奋好学、脚踏实地，积极进取，勇于挑战。有较强的<strong style="color:var(--primary-light);">团队精神</strong>，工作积极、勤奋刻苦、态度认真，具备较强的<strong style="color:var(--primary-light);">抗压能力和责任感</strong>。
+      </p>
+      <div style="margin-top:16px;">
+        <span class="badge-inline">热情开朗</span><span class="badge-inline">品学兼优</span><span class="badge-inline">团队协作</span><span class="badge-inline">抗压担当</span><span class="badge-inline">积极进取</span>
+      </div>
+    </div>
+  </div>
+  <div class="stat-grid reveal" style="margin-top:36px;">
+    <div class="stat"><div class="num" data-count="3.59" data-decimals="2">0</div><div class="label">学分绩点（专业 7/74）</div></div>
+    <div class="stat"><div class="num" data-count="87.91" data-decimals="2">0</div><div class="label">综测成绩（专业 2/74）</div></div>
+    <div class="stat"><div class="num" data-count="9" data-decimals="0">0</div><div class="label">90+ 分科目</div></div>
+    <div class="stat"><div class="num" data-count="154.35" data-decimals="2">0</div><div class="label">志愿服务时长（小时）</div></div>
+    <div class="stat"><div class="num" data-count="4" data-decimals="0">0</div><div class="label">独立开发项目</div></div>
+  </div>
+</section>
+
+<!-- ===== 教育背景 ===== -->
+<section class="section" id="education" style="background:#fff;">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v5"/></svg></span>教育背景</h2>
+  <div class="card reveal">
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+      <h3 style="font-size:19px;">东北电力大学 <span style="font-weight:400; color:var(--text-light); font-size:15px;">· 智能科学与技术（本科）</span></h3>
+      <span class="d-tag">2023.09 - 2027.06</span>
+    </div>
+    <p style="color:var(--text-light); font-size:14px; margin-bottom:6px;">
+      学分绩点 <strong style="color:var(--primary-light);">3.59（专业 7/74）</strong>　|　综测成绩 <strong style="color:var(--primary-light);">87.91（专业 2/74）</strong>
+    </p>
+    <p style="color:var(--text-light); font-size:14px; margin-bottom:4px;">学业表现：平均绩点 3.52、平均成绩 85.85 分（40 门必修科目），其中 9 门科目成绩突破 90 分。</p>
+  </div>
+  <h3 style="margin:32px 0 18px; font-size:20px;">主修课程成绩</h3>
+  <div class="grid-3">
+    <div class="card reveal" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">计算机网络技术</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">97</div></div>
+    <div class="card reveal delay-1" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">面向对象程序设计</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">94</div></div>
+    <div class="card reveal delay-2" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">单片机原理与应用</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">93</div></div>
+    <div class="card reveal" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">Linux 操作系统</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">92</div></div>
+    <div class="card reveal delay-1" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">数据结构</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">90</div></div>
+    <div class="card reveal delay-2" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">Python 程序设计</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">89</div></div>
+  </div>
+</section>
+
+<!-- ===== 项目经验 ===== -->
+<section class="section" id="projects">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><path d="M10 20l-6-6 6-6"/><path d="M14 4l6 6-6 6"/></svg></span>项目经验</h2>
+  <div class="tabs reveal">
+    <button class="tab-btn active" onclick="switchTab(0, this)">按时间线</button>
+    <button class="tab-btn" onclick="switchTab(1, this)">按技术栈</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-0">
+    <div class="timeline">
+      <div class="tl-item card reveal" style="border:none;">
+        <div class="meta">2023.09 — 2023.12</div>
+        <h3>无人超市售货管理系统 <span class="badge-inline">C#</span><span class="badge-inline">SQL Server</span></h3>
+        <p>基于 C# 与 SQL Server 设计并实现无人超市自助售货管理系统，涵盖<strong>商品管理、购物车结算、库存预警、会员积分、销售报表</strong>五大核心模块。编写存储过程优化高频查询性能约 <strong>30%</strong>。独立完成需求分析、数据库 E-R 设计及系统测试。</p>
+      </div>
+      <div class="tl-item card reveal delay-1" style="border:none;">
+        <div class="meta">2024.03 — 2024.10</div>
+        <h3>基于 ALS 用户行为分析的电影推荐系统 <span class="badge-inline">Python</span><span class="badge-inline">Spark MLlib</span><span class="badge-inline">Flask</span><span class="badge-inline">ECharts</span></h3>
+        <p>基于 Spark MLlib 的 <strong>ALS 协同过滤算法</strong>搭建电影推荐系统，完成数据预处理、模型训练与 Web 展示全流程。后端使用 Flask 搭建 RESTful API，前端基于 ECharts 实现推荐结果<strong>可视化大屏</strong>，支持 Top-N 推荐与用户画像展示。</p>
+      </div>
+      <div class="tl-item card reveal delay-2" style="border:none;">
+        <div class="meta">2024.08 — 2025.10</div>
+        <h3>基于 μC/OS-II 的无人机通讯控制系统 <span class="badge-inline">C 语言</span><span class="badge-inline">STM32</span></h3>
+        <p>基于 <strong>μC/OS-II 实时操作系统</strong>与 STM32F103C8 平台，设计实现四旋翼无人机通讯控制系统。系统包含飞控、数传、地面站三大任务，共 <strong>6 个并发任务</strong>，利用信号量与消息队列机制实现任务间同步通信。</p>
+      </div>
+      <div class="tl-item card reveal delay-3" style="border:none;">
+        <div class="meta">2025.11 — 2026.03</div>
+        <h3>基于 C-S 结构的多人聊天系统 <span class="badge-inline">Java</span><span class="badge-inline">Socket</span><span class="badge-inline">多线程</span></h3>
+        <p>基于 Java Socket 与多线程技术实现 C/S 架构的多人实时聊天系统。服务端采用<strong>线程池</strong>管理连接，通过<strong>自定义应用层协议</strong>解决 TCP 粘包问题；客户端基于 Java Swing 开发 GUI，使用<strong>观察者模式</strong>实现消息异步推送。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-1">
+    <div class="grid-2">
+      <div class="card reveal"><h3 style="margin-bottom:10px;">🐍 Python 数据 / Web</h3><p style="color:var(--text-light); font-size:14.5px;">Spark MLlib 协同过滤推荐系统、Flask RESTful API、ECharts 可视化大屏、Top-N 推荐与用户画像</p></div>
+      <div class="card reveal delay-1"><h3 style="margin-bottom:10px;">🔧 C / C# 底层与桌面</h3><p style="color:var(--text-light); font-size:14.5px;">μC/OS-II 实时操作系统多任务调度、STM32 嵌入式开发、C# + SQL Server 桌面管理系统</p></div>
+      <div class="card reveal"><h3 style="margin-bottom:10px;">☕ Java 网络编程</h3><p style="color:var(--text-light); font-size:14.5px;">Socket 网络通信、线程池并发、自定义协议解决粘包、Swing GUI、观察者模式</p></div>
+      <div class="card reveal delay-1"><h3 style="margin-bottom:10px;">🗄 数据库与系统</h3><p style="color:var(--text-light); font-size:14.5px;">SQL Server 存储过程性能优化、E-R 模型设计、Linux 操作系统应用</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 荣誉奖励 ===== -->
+<section class="section" id="awards" style="background:#fff;">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 21l5-3 5 3-1.5-8.5"/></svg></span>荣誉奖励</h2>
+  <div class="tabs reveal">
+    <button class="tab-btn active" onclick="switchTab(2, this)">学科竞赛</button>
+    <button class="tab-btn" onclick="switchTab(3, this)">奖学金</button>
+    <button class="tab-btn" onclick="switchTab(4, this)">荣誉称号</button>
+  </div>
+  <div class="tab-panel active" id="tab-2">
+    <div class="grid-2">
+      <div class="award reveal"><div class="medal gold">一</div><div class="txt">中国电机工程学会数学建模竞赛（电工杯）一等奖</div></div>
+      <div class="award reveal delay-1"><div class="medal silver">三</div><div class="txt">吉林省挑战杯红色专项竞赛省级三等奖</div></div>
+      <div class="award reveal"><div class="medal blue">二</div><div class="txt">中国大学生创新大赛东北电力大学校赛二等奖</div></div>
+      <div class="award reveal delay-1"><div class="medal cyan">三</div><div class="txt">全国大学生物联网大赛校赛三等奖</div></div>
+      <div class="award reveal"><div class="medal blue">二</div><div class="txt">东北电力大学第三届人物访谈大赛校级二等奖</div></div>
+    </div>
+  </div>
+  <div class="tab-panel" id="tab-3">
+    <div class="grid-2">
+      <div class="award reveal"><div class="medal gold">奖</div><div class="txt">2025 年吉林省政府奖学金</div></div>
+      <div class="award reveal delay-1"><div class="medal gold">奖</div><div class="txt">2025 年国电南自奖学金</div></div>
+      <div class="award reveal"><div class="medal blue">奖</div><div class="txt">2025 年校优秀学生二等奖学金</div></div>
+      <div class="award reveal delay-1"><div class="medal cyan">奖</div><div class="txt">2024 年校优秀学生三等奖学金</div></div>
+    </div>
+    <p class="reveal" style="margin-top:20px; color:var(--text-light); font-size:14px;">📌 累计获得各类奖助学金总计 <strong style="color:var(--primary-light);">2 万余元</strong></p>
+  </div>
+  <div class="tab-panel" id="tab-4">
+    <div class="grid-2">
+      <div class="award reveal"><div class="medal gold">优</div><div class="txt">校优秀学生干部标兵荣誉称号</div></div>
+      <div class="award reveal delay-1"><div class="medal blue">优</div><div class="txt">优秀团干部荣誉称号</div></div>
+      <div class="award reveal"><div class="medal blue">优</div><div class="txt">优秀学生标兵称号</div></div>
+      <div class="award reveal delay-1"><div class="medal cyan">优</div><div class="txt">优秀学生干部称号</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 学生工作 ===== -->
+<section class="section" id="leadership">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>学生工作与组织</h2>
+  <div class="grid-2" style="margin-bottom:32px;">
+    <div class="card reveal" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">智能231班班长</div><div style="color:var(--text-light); font-size:14px;">班级建设 · 学风引领</div></div>
+    <div class="card reveal delay-1" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计算机学院青年志愿者站站长</div><div style="color:var(--text-light); font-size:14px;">志愿活动策划与统筹</div></div>
+    <div class="card reveal delay-2" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计算机学院学生会轮值主席</div><div style="color:var(--text-light); font-size:14px;">文体活动组织统筹</div></div>
+    <div class="card reveal delay-3" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计机253班新生代理班长</div><div style="color:var(--text-light); font-size:14px;">新生入学引导</div></div>
+  </div>
+  <h3 style="margin-bottom:16px; font-size:19px;">亮点经历</h3>
+  <details class="reveal" open>
+    <summary>🏅 志愿服务站站长 · 策划特色活动</summary>
+    <div class="d-body">
+      <span class="d-tag">AI 智能体</span>「雷锋月」期间结合专业特色搭建「雷锋」AI 智能体；<br>
+      <span class="d-tag">劳动教育</span>「变形记——寝室保洁员角色体验」活动，参与人数达 50 余人，增强劳动意识与互助精神；<br>
+      <span class="d-tag">文体活动</span>统筹组织歌手大赛、草地音乐节、2024 级迎新晚会、「一二·九」合唱比赛等活动；<br>
+      <span class="d-tag">社会实践</span>作为领队带领团队开展暑期「三下乡」主题社会实践活动。
+    </div>
+  </details>
+  <details class="reveal">
+    <summary>👥 班长 · 班级凝聚力与学风建设</summary>
+    <div class="d-body">
+      <span class="d-tag">班团活动</span>组织筹办「推动科技创新，智能以赛促学」「盈动春天，幸福启程」等主题班团活动 <strong>9 次</strong>；<br>
+      <span class="d-tag">学风建设</span>组织开展班级学习会 <strong>6 次</strong>，通过重难点讲解、学习经验分享，帮助班级同学共同进步。
+    </div>
+  </details>
+</section>
+
+<!-- ===== 公益实践 ===== -->
+<section class="section" id="public" style="background:#fff;">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-3 4.5 4.5 0 0 1 8 3c0 5.5-8 11-8 11z"/></svg></span>公益实践</h2>
+  <div class="stat-grid reveal">
+    <div class="stat"><div class="num" data-count="100" data-decimals="0">0</div><div class="label">云支教累计授课时长（小时）</div></div>
+    <div class="stat"><div class="num" data-count="3" data-decimals="0">0</div><div class="label">参与云支教次数</div></div>
+    <div class="stat"><div class="num" data-count="700" data-decimals="0">0</div><div class="label">无偿献血总量（cc）</div></div>
+    <div class="stat"><div class="num" data-count="154.35" data-decimals="2">0</div><div class="label">志愿服务总时长（小时）</div></div>
+  </div>
+  <details class="reveal" open>
+    <summary>📚 假期云支教 · 点亮远方课堂</summary>
+    <div class="d-body">三次参与假期云支教活动，通过线上课堂为偏远地区学生讲授<strong>计算机基础、趣味科学</strong>等课程，累计授课时长超 <strong>100 小时</strong>，帮助孩子们拓宽视野。</div>
+  </details>
+  <details class="reveal">
+    <summary>🩸 无偿献血 · 传递生命温度</summary>
+    <div class="d-body">先后两次参与无偿献血，累计献血量达 <strong>700cc</strong>，用实际行动践行当代大学生的社会责任。</div>
+  </details>
+</section>
+
+<!-- ===== 技能特长 ===== -->
+<section class="section" id="skills">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-3.2 3.2-2-2 3.2-3.2z"/></svg></span>技能特长</h2>
+  <div class="grid-2">
+    <div class="card reveal">
+      <h3 style="margin-bottom:18px;">编程语言</h3>
+      <div class="skill-row"><div class="top"><span>Python</span><span>90%</span></div><div class="skill-bar"><div class="fill" data-w="90%"></div></div></div>
+      <div class="skill-row"><div class="top"><span>C / C#</span><span>85%</span></div><div class="skill-bar"><div class="fill" data-w="85%"></div></div></div>
+      <div class="skill-row"><div class="top"><span>Java</span><span>80%</span></div><div class="skill-bar"><div class="fill" data-w="80%"></div></div></div>
+      <div class="skill-row"><div class="top"><span>SQL</span><span>78%</span></div><div class="skill-bar"><div class="fill" data-w="78%"></div></div></div>
+    </div>
+    <div class="card reveal delay-1">
+      <h3 style="margin-bottom:18px;">技术方向</h3>
+      <div class="skill-row"><div class="top"><span>数据分析 / 机器学习</span><span>88%</span></div><div class="skill-bar"><div class="fill" data-w="88%"></div></div></div>
+      <div class="skill-row"><div class="top"><span>嵌入式 / 实时操作系统</span><span>82%</span></div><div class="skill-bar"><div class="fill" data-w="82%"></div></div></div>
+      <div class="skill-row"><div class="top"><span>Web 全栈开发</span><span>80%</span></div><div class="skill-bar"><div class="fill" data-w="80%"></div></div></div>
+      <div class="skill-row"><div class="top"><span>Linux 系统运维</span><span>75%</span></div><div class="skill-bar"><div class="fill" data-w="75%"></div></div></div>
+    </div>
+  </div>
+  <div class="card reveal" style="margin-top:24px;">
+    <h3 style="margin-bottom:10px;">综合素质</h3>
+    <span class="badge-inline">团队合作</span><span class="badge-inline">沟通表达</span><span class="badge-inline">组织统筹</span><span class="badge-inline">项目管理</span><span class="badge-inline">抗压能力</span><span class="badge-inline">责任担当</span><span class="badge-inline">自主学习</span><span class="badge-inline">创新实践</span>
+  </div>
+</section>
+
+<!-- ===== 联系方式 ===== -->
+<section class="section" id="contact">
+  <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 6l8 6 8-6"/></svg></span>联系方式</h2>
+  <div class="contact-grid">
+    <a class="contact-item reveal" href="tel:18660651786"><div class="c-icon"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg></div><div><div class="c-label">电话</div><div class="c-value">18660651786</div></div></a>
+    <a class="contact-item reveal delay-1" href="mailto:1714291943@qq.com"><div class="c-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 6l8 6 8-6"/></svg></div><div><div class="c-label">邮箱</div><div class="c-value">1714291943@qq.com</div></div></a>
+    <div class="contact-item reveal delay-2"><div class="c-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.3 8.5 8.5 0 0 1-3.8-.9L3 21l2-5.5a8.3 8.3 0 0 1-1-4 8.38 8.38 0 0 1 8.5-8.3 8.5 8.5 0 0 1 8.5 8.3z"/></svg></div><div><div class="c-label">微信</div><div class="c-value">NancyNax</div></div></div>
+    <div class="contact-item reveal delay-3"><div class="c-icon"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-3 4.5 4.5 0 0 1 8 3c0 5.5-8 11-8 11z"/></svg></div><div><div class="c-label">现居</div><div class="c-value">山东省潍坊市</div></div></div>
+  </div>
+</section>
+
+<footer>
+  <p>管俊宇 · 东北电力大学 · 智能科学与技术 2027 届</p>
+  <p style="margin-top:6px;">真诚期待与您的交流</p>
+</footer>
+
+<button id="backTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<script>
+  // 导航栏滚动效果
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+  // 移动端导航
+  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+
+  // 高亮当前导航
+  const sections = document.querySelectorAll('section[id], header[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => spy.observe(s));
+
+  // 滚动渐入
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // 数字计数动画
+  const countObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target, target = parseFloat(el.dataset.count), dec = parseInt(el.dataset.decimals || 0);
+      const dur = 1400, start = performance.now();
+      (function tick(now) {
+        const p = Math.min((now - start) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = (target * eased).toFixed(dec);
+        if (p < 1) requestAnimationFrame(tick);
+      })(start);
+      countObs.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.num[data-count]').forEach(el => countObs.observe(el));
+
+  // 技能条动画
+  const barObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.style.width = e.target.dataset.w;
+      barObs.unobserve(e.target);
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.fill[data-w]').forEach(el => barObs.observe(el));
+
+  // 标签页切换（分组：0-1 项目、2-4 荣誉）
+  function switchTab(idx, btn) {
+    const group = btn.closest('.tabs');
+    const isAward = group.parentElement.id === 'awards';
+    const panels = group.parentElement.querySelectorAll('.tab-panel');
+    group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    panels.forEach(p => p.classList.remove('active'));
+    const targetId = isAward ? 'tab-' + idx : 'tab-' + idx;
+    document.getElementById(targetId)?.classList.add('active');
+  }
+
+  // 回到顶部
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', () => backTop.classList.toggle('show', window.scrollY > 600));
+</script>
+</body>
+</html>
