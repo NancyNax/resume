@@ -181,7 +181,7 @@
   .tl-item p { color: var(--text-light); font-size: 14.5px; }
 
   /* ===== 荣誉/徽章 ===== */
-  .award { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; transition: all .3s; }
+  .award { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; transition: all .3s; }
   .award:hover { transform: translateX(6px); border-color: var(--primary-light); }
   .award .medal {
     width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%;
@@ -209,6 +209,54 @@
   .contact-item .c-label { font-size: 12px; color: var(--text-light); }
   .contact-item .c-value { font-size: 15px; font-weight: 700; word-break: break-all; }
 
+  /* ===== 实践图片网格 ===== */
+  .photo-grid { margin-top: 14px; }
+  .photo-grid-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .photo-thumb { display: block; border-radius: 10px; overflow: hidden; border: 2px solid transparent; transition: all .3s; cursor: zoom-in; background: #e2e8f0; }
+  .photo-thumb:hover { border-color: var(--primary-light); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(15,23,42,.18); }
+  .photo-thumb img { width: 100%; height: 96px; object-fit: cover; display: block; }
+  .award .photo-grid { flex-basis: 100%; margin-top: 6px; }
+
+  /* ===== Lightbox 大图预览 ===== */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 1000; background: rgba(8,12,26,.94);
+    display: none; align-items: center; justify-content: center;
+  }
+  .lightbox.show { display: flex; animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lb-stage { max-width: 82vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; cursor: zoom-in; }
+  .lb-stage img {
+    max-width: 82vw; max-height: 82vh; border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.55); transition: transform .3s ease; object-fit: contain;
+  }
+  .lb-stage img.zoomed { transform: scale(1.8); cursor: zoom-out; }
+  .lb-close {
+    position: absolute; top: 18px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,.12); color: #fff; font-size: 26px; line-height: 1;
+    cursor: pointer; transition: all .3s; z-index: 1001;
+  }
+  .lb-close:hover { background: rgba(255,255,255,.28); transform: rotate(90deg); }
+  .lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px;
+    border-radius: 50%; border: none; background: rgba(255,255,255,.12); color: #fff; font-size: 26px;
+    cursor: pointer; transition: all .3s; display: flex; align-items: center; justify-content: center; z-index: 1001;
+  }
+  .lb-nav:hover { background: rgba(255,255,255,.28); }
+  .lb-prev { left: 20px; }
+  .lb-next { right: 20px; }
+  .lb-count {
+    position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+    color: #e2e8f0; font-size: 14px; background: rgba(0,0,0,.45); padding: 4px 16px; border-radius: 999px; z-index: 1001;
+  }
+  .lb-hint {
+    position: absolute; bottom: 58px; left: 50%; transform: translateX(-50%);
+    color: #94a3b8; font-size: 12px; white-space: nowrap; z-index: 1001;
+  }
+  @media (max-width: 768px) {
+    .lb-hint { display: none; }
+    .lb-nav { width: 40px; height: 40px; font-size: 22px; }
+  }
+
   /* ===== 动画 ===== */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
@@ -234,7 +282,7 @@
     .section { padding: 60px 6vw; }
   }
   @media print {
-    nav, #backTop, .scroll-hint, .btn, .tabs { display: none !important; }
+    nav, #backTop, .scroll-hint, .btn, .tabs, .photo-grid, .lightbox { display: none !important; }
     .hero { min-height: auto; padding: 60px 5vw; }
     body { background: #fff; }
     .card, .award, details { box-shadow: none; break-inside: avoid; }
@@ -327,15 +375,35 @@
       学分绩点 <strong style="color:var(--primary-light);">3.59（专业 7/74）</strong>　|　综测成绩 <strong style="color:var(--primary-light);">87.91（专业 2/74）</strong>
     </p>
     <p style="color:var(--text-light); font-size:14px; margin-bottom:4px;">学业表现：平均绩点 3.52、平均成绩 85.85 分（40 门必修科目），其中 9 门科目成绩突破 90 分。</p>
+    <!-- IMAGE_LIST: edu-1 | 校园/学习照片（可放校园风景、上课、图书馆、成绩单等）示例：["images/edu1_1.jpg","images/edu1_2.jpg"]，留空 [] 自动隐藏 -->
+    <div class="photo-grid" data-images="[]"></div>
   </div>
   <h3 style="margin:32px 0 18px; font-size:20px;">主修课程成绩</h3>
   <div class="grid-3">
-    <div class="card reveal" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">计算机网络技术</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">97</div></div>
-    <div class="card reveal delay-1" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">面向对象程序设计</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">94</div></div>
-    <div class="card reveal delay-2" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">单片机原理与应用</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">93</div></div>
-    <div class="card reveal" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">Linux 操作系统</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">92</div></div>
-    <div class="card reveal delay-1" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">数据结构</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">90</div></div>
-    <div class="card reveal delay-2" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">Python 程序设计</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">89</div></div>
+    <div class="card reveal" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">计算机网络技术</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">97</div>
+      <!-- IMAGE_LIST: edu-course-1 | 计算机网络技术 成绩/笔记/实验照片，示例：["images/educc1_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images="[]"></div>
+    </div>
+    <div class="card reveal delay-1" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">面向对象程序设计</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">94</div>
+      <!-- IMAGE_LIST: edu-course-2 | 面向对象程序设计 相关照片，示例：["images/educc2_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images="[]"></div>
+    </div>
+    <div class="card reveal delay-2" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">单片机原理与应用</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">93</div>
+      <!-- IMAGE_LIST: edu-course-3 | 单片机原理与应用 实验/板子照片，示例：["images/educc3_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images="[]"></div>
+    </div>
+    <div class="card reveal" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">Linux 操作系统</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">92</div>
+      <!-- IMAGE_LIST: edu-course-4 | Linux 操作系统 相关照片，示例：["images/educc4_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images="[]"></div>
+    </div>
+    <div class="card reveal delay-1" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">数据结构</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">90</div>
+      <!-- IMAGE_LIST: edu-course-5 | 数据结构 相关照片，示例：["images/educc5_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images="[]"></div>
+    </div>
+    <div class="card reveal delay-2" style="text-align:center; padding:20px;"><div style="font-size:15px; font-weight:600;">Python 程序设计</div><div style="font-size:34px; font-weight:800; color:var(--primary-light);">89</div>
+      <!-- IMAGE_LIST: edu-course-6 | Python 程序设计 相关照片，示例：["images/educc6_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images="[]"></div>
+    </div>
   </div>
 </section>
 
@@ -353,21 +421,29 @@
         <div class="meta">2023.09 — 2023.12</div>
         <h3>无人超市售货管理系统 <span class="badge-inline">C#</span><span class="badge-inline">SQL Server</span></h3>
         <p>基于 C# 与 SQL Server 设计并实现无人超市自助售货管理系统，涵盖<strong>商品管理、购物车结算、库存预警、会员积分、销售报表</strong>五大核心模块。编写存储过程优化高频查询性能约 <strong>30%</strong>。独立完成需求分析、数据库 E-R 设计及系统测试。</p>
+        <!-- IMAGE_LIST: proj-1 | 无人超市售货管理系统（界面截图、E-R 图、演示照片等）示例：["images/proj1_1.jpg","images/proj1_2.jpg","images/proj1_3.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images="[]"></div>
       </div>
       <div class="tl-item card reveal delay-1" style="border:none;">
         <div class="meta">2024.03 — 2024.10</div>
         <h3>基于 ALS 用户行为分析的电影推荐系统 <span class="badge-inline">Python</span><span class="badge-inline">Spark MLlib</span><span class="badge-inline">Flask</span><span class="badge-inline">ECharts</span></h3>
         <p>基于 Spark MLlib 的 <strong>ALS 协同过滤算法</strong>搭建电影推荐系统，完成数据预处理、模型训练与 Web 展示全流程。后端使用 Flask 搭建 RESTful API，前端基于 ECharts 实现推荐结果<strong>可视化大屏</strong>，支持 Top-N 推荐与用户画像展示。</p>
+        <!-- IMAGE_LIST: proj-2 | 电影推荐系统（可视化大屏、推荐效果截图、代码/架构图等）示例：["images/proj2_1.jpg","images/proj2_2.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images="[]"></div>
       </div>
       <div class="tl-item card reveal delay-2" style="border:none;">
         <div class="meta">2024.08 — 2025.10</div>
         <h3>基于 μC/OS-II 的无人机通讯控制系统 <span class="badge-inline">C 语言</span><span class="badge-inline">STM32</span></h3>
         <p>基于 <strong>μC/OS-II 实时操作系统</strong>与 STM32F103C8 平台，设计实现四旋翼无人机通讯控制系统。系统包含飞控、数传、地面站三大任务，共 <strong>6 个并发任务</strong>，利用信号量与消息队列机制实现任务间同步通信。</p>
+        <!-- IMAGE_LIST: proj-3 | 无人机通讯控制系统（实物/飞控板/调试现场照片等）示例：["images/proj3_1.jpg","images/proj3_2.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images="[]"></div>
       </div>
       <div class="tl-item card reveal delay-3" style="border:none;">
         <div class="meta">2025.11 — 2026.03</div>
         <h3>基于 C-S 结构的多人聊天系统 <span class="badge-inline">Java</span><span class="badge-inline">Socket</span><span class="badge-inline">多线程</span></h3>
         <p>基于 Java Socket 与多线程技术实现 C/S 架构的多人实时聊天系统。服务端采用<strong>线程池</strong>管理连接，通过<strong>自定义应用层协议</strong>解决 TCP 粘包问题；客户端基于 Java Swing 开发 GUI，使用<strong>观察者模式</strong>实现消息异步推送。</p>
+        <!-- IMAGE_LIST: proj-4 | 多人聊天系统（客户端界面、运行演示截图等）示例：["images/proj4_1.jpg","images/proj4_2.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images="[]"></div>
       </div>
     </div>
   </div>
@@ -392,28 +468,67 @@
   </div>
   <div class="tab-panel active" id="tab-2">
     <div class="grid-2">
-      <div class="award reveal"><div class="medal gold">一</div><div class="txt">中国电机工程学会数学建模竞赛（电工杯）一等奖</div></div>
-      <div class="award reveal delay-1"><div class="medal silver">三</div><div class="txt">吉林省挑战杯红色专项竞赛省级三等奖</div></div>
-      <div class="award reveal"><div class="medal blue">二</div><div class="txt">中国大学生创新大赛东北电力大学校赛二等奖</div></div>
-      <div class="award reveal delay-1"><div class="medal cyan">三</div><div class="txt">全国大学生物联网大赛校赛三等奖</div></div>
-      <div class="award reveal"><div class="medal blue">二</div><div class="txt">东北电力大学第三届人物访谈大赛校级二等奖</div></div>
+      <div class="award reveal"><div class="medal gold">一</div><div class="txt">中国电机工程学会数学建模竞赛（电工杯）一等奖</div>
+        <!-- IMAGE_LIST: award-1 | 数学建模竞赛一等奖 证书照片，示例：["images/award1_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award1_1.png"]'></div>
+      </div>
+      <div class="award reveal delay-1"><div class="medal silver">三</div><div class="txt">吉林省挑战杯红色专项竞赛省级三等奖</div>
+        <!-- IMAGE_LIST: award-2 | 挑战杯省级三等奖 证书照片，示例：["images/award2_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award2_1.jpg"]'></div>
+      </div>
+      <div class="award reveal"><div class="medal blue">二</div><div class="txt">中国大学生创新大赛东北电力大学校赛二等奖</div>
+        <!-- IMAGE_LIST: award-3 | 创新大赛校赛二等奖 证书照片，示例：["images/award3_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award3_1.png"]'></div>
+      </div>
+      <div class="award reveal delay-1"><div class="medal cyan">三</div><div class="txt">全国大学生物联网大赛校赛三等奖</div>
+        <!-- IMAGE_LIST: award-4 | 物联网大赛校赛三等奖 证书照片，示例：["images/award4_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award4_1.png"]'></div>
+      </div>
+      <div class="award reveal"><div class="medal blue">二</div><div class="txt">东北电力大学第三届人物访谈大赛校级二等奖</div>
+        <!-- IMAGE_LIST: award-5 | 人物访谈大赛校级二等奖 证书照片，示例：["images/award5_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award5_1.jpg"]'></div>
+      </div>
     </div>
   </div>
   <div class="tab-panel" id="tab-3">
     <div class="grid-2">
-      <div class="award reveal"><div class="medal gold">奖</div><div class="txt">2025 年吉林省政府奖学金</div></div>
-      <div class="award reveal delay-1"><div class="medal gold">奖</div><div class="txt">2025 年国电南自奖学金</div></div>
-      <div class="award reveal"><div class="medal blue">奖</div><div class="txt">2025 年校优秀学生二等奖学金</div></div>
-      <div class="award reveal delay-1"><div class="medal cyan">奖</div><div class="txt">2024 年校优秀学生三等奖学金</div></div>
+      <div class="award reveal"><div class="medal gold">奖</div><div class="txt">2025 年吉林省政府奖学金</div>
+        <!-- IMAGE_LIST: award-6 | 吉林省政府奖学金 证书/公示照片，示例：["images/award6_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award6_1.jpg","images/award6_2.jpg"]'></div>
+      </div>
+      <div class="award reveal delay-1"><div class="medal gold">奖</div><div class="txt">2025 年国电南自奖学金</div>
+        <!-- IMAGE_LIST: award-7 | 国电南自奖学金 证书/公示照片，示例：["images/award7_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award7_1.jpg"]'></div>
+      </div>
+      <div class="award reveal"><div class="medal blue">奖</div><div class="txt">2025 年校优秀学生二等奖学金</div>
+        <!-- IMAGE_LIST: award-8 | 校二等奖学金 证书/公示照片，示例：["images/award8_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award8_1.jpg"]'></div>
+      </div>
+      <div class="award reveal delay-1"><div class="medal cyan">奖</div><div class="txt">2024 年校优秀学生三等奖学金</div>
+        <!-- IMAGE_LIST: award-9 | 校三等奖学金 证书/公示照片，示例：["images/award9_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award9_1.jpg"]'></div>
+      </div>
     </div>
     <p class="reveal" style="margin-top:20px; color:var(--text-light); font-size:14px;">📌 累计获得各类奖助学金总计 <strong style="color:var(--primary-light);">2 万余元</strong></p>
   </div>
   <div class="tab-panel" id="tab-4">
     <div class="grid-2">
-      <div class="award reveal"><div class="medal gold">优</div><div class="txt">校优秀学生干部标兵荣誉称号</div></div>
-      <div class="award reveal delay-1"><div class="medal blue">优</div><div class="txt">优秀团干部荣誉称号</div></div>
-      <div class="award reveal"><div class="medal blue">优</div><div class="txt">优秀学生标兵称号</div></div>
-      <div class="award reveal delay-1"><div class="medal cyan">优</div><div class="txt">优秀学生干部称号</div></div>
+      <div class="award reveal"><div class="medal gold">优</div><div class="txt">校优秀学生干部标兵荣誉称号</div>
+        <!-- IMAGE_LIST: award-10 | 优秀学生干部标兵 证书照片，示例：["images/award10_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award10_1.jpg"]'></div>
+      </div>
+      <div class="award reveal delay-1"><div class="medal blue">优</div><div class="txt">优秀团干部荣誉称号</div>
+        <!-- IMAGE_LIST: award-11 | 优秀团干部 证书照片，示例：["images/award11_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award11_1.jpg"]'></div>
+      </div>
+      <div class="award reveal"><div class="medal blue">优</div><div class="txt">优秀学生标兵称号</div>
+        <!-- IMAGE_LIST: award-12 | 优秀学生标兵 证书照片，示例：["images/award12_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images='["images/award12_1.jpg","images/award12_2.jpg"]'></div>
+      </div>
+      <div class="award reveal delay-1"><div class="medal cyan">优</div><div class="txt">优秀学生干部称号</div>
+        <!-- IMAGE_LIST: award-13 | 优秀学生干部 证书照片，示例：["images/award13_1.jpg"]，留空 [] 自动隐藏 -->
+        <div class="photo-grid" data-images="[]"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -422,10 +537,22 @@
 <section class="section" id="leadership">
   <h2 class="section-title"><span class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>学生工作与组织</h2>
   <div class="grid-2" style="margin-bottom:32px;">
-    <div class="card reveal" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">智能231班班长</div><div style="color:var(--text-light); font-size:14px;">班级建设 · 学风引领</div></div>
-    <div class="card reveal delay-1" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计算机学院青年志愿者站站长</div><div style="color:var(--text-light); font-size:14px;">志愿活动策划与统筹</div></div>
-    <div class="card reveal delay-2" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计算机学院学生会轮值主席</div><div style="color:var(--text-light); font-size:14px;">文体活动组织统筹</div></div>
-    <div class="card reveal delay-3" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计机253班新生代理班长</div><div style="color:var(--text-light); font-size:14px;">新生入学引导</div></div>
+    <div class="card reveal" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">智能231班班长</div><div style="color:var(--text-light); font-size:14px;">班级建设 · 学风引领</div>
+      <!-- IMAGE_LIST: leader-1 | 班长工作（班会/班级活动/聘书照片等）示例：["images/leader1_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images='["images/leader1_1.jpg"]'></div>
+    </div>
+    <div class="card reveal delay-1" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计算机学院青年志愿者站站长</div><div style="color:var(--text-light); font-size:14px;">志愿活动策划与统筹</div>
+      <!-- IMAGE_LIST: leader-2 | 志愿者站站长（活动/聘书照片等）示例：["images/leader2_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images='["images/leader2_1.jpg"]'></div>
+    </div>
+    <div class="card reveal delay-2" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计算机学院学生会轮值主席</div><div style="color:var(--text-light); font-size:14px;">文体活动组织统筹</div>
+      <!-- IMAGE_LIST: leader-3 | 学生会轮值主席（活动照片/聘书等）示例：["images/leader3_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images='["images/leader3_1.jpg","images/leader3_2.jpg"]'></div>
+    </div>
+    <div class="card reveal delay-3" style="text-align:center; padding:24px;"><div style="font-size:26px; font-weight:800; color:var(--primary-light);">计机253班新生代理班长</div><div style="color:var(--text-light); font-size:14px;">新生入学引导</div>
+      <!-- IMAGE_LIST: leader-4 | 新生代理班长（迎新/引导照片等）示例：["images/leader4_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images='["images/leader4_1.jpg"]'></div>
+    </div>
   </div>
   <h3 style="margin-bottom:16px; font-size:19px;">亮点经历</h3>
   <details class="reveal" open>
@@ -435,6 +562,8 @@
       <span class="d-tag">劳动教育</span>「变形记——寝室保洁员角色体验」活动，参与人数达 50 余人，增强劳动意识与互助精神；<br>
       <span class="d-tag">文体活动</span>统筹组织歌手大赛、草地音乐节、2024 级迎新晚会、「一二·九」合唱比赛等活动；<br>
       <span class="d-tag">社会实践</span>作为领队带领团队开展暑期「三下乡」主题社会实践活动。
+      <!-- IMAGE_LIST: leader-detail-1 | 特色活动照片（雷锋月AI/寝室保洁/歌手大赛/晚会/三下乡等）示例：["images/leaderd1_1.jpg","images/leaderd1_2.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images='["images/leaderd1_1.jpg","images/leaderd1_2.jpg"]'></div>
     </div>
   </details>
   <details class="reveal">
@@ -442,6 +571,8 @@
     <div class="d-body">
       <span class="d-tag">班团活动</span>组织筹办「推动科技创新，智能以赛促学」「盈动春天，幸福启程」等主题班团活动 <strong>9 次</strong>；<br>
       <span class="d-tag">学风建设</span>组织开展班级学习会 <strong>6 次</strong>，通过重难点讲解、学习经验分享，帮助班级同学共同进步。
+      <!-- IMAGE_LIST: leader-detail-2 | 班团活动/学习会照片，示例：["images/leaderd2_1.jpg","images/leaderd2_2.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images='["images/leaderd2_1.jpg"]'></div>
     </div>
   </details>
 </section>
@@ -457,11 +588,17 @@
   </div>
   <details class="reveal" open>
     <summary>📚 假期云支教 · 点亮远方课堂</summary>
-    <div class="d-body">三次参与假期云支教活动，通过线上课堂为偏远地区学生讲授<strong>计算机基础、趣味科学</strong>等课程，累计授课时长超 <strong>100 小时</strong>，帮助孩子们拓宽视野。</div>
+    <div class="d-body">三次参与假期云支教活动，通过线上课堂为偏远地区学生讲授<strong>计算机基础、趣味科学</strong>等课程，累计授课时长超 <strong>100 小时</strong>，帮助孩子们拓宽视野。
+      <!-- IMAGE_LIST: public-1 | 云支教（线上授课截图/备课/证书等）示例：["images/public1_1.jpg","images/public1_2.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images='["images/public1_1.jpg","images/public1_2.jpg"]'></div>
+    </div>
   </details>
   <details class="reveal">
     <summary>🩸 无偿献血 · 传递生命温度</summary>
-    <div class="d-body">先后两次参与无偿献血，累计献血量达 <strong>700cc</strong>，用实际行动践行当代大学生的社会责任。</div>
+    <div class="d-body">先后两次参与无偿献血，累计献血量达 <strong>700cc</strong>，用实际行动践行当代大学生的社会责任。
+      <!-- IMAGE_LIST: public-2 | 无偿献血（献血证/现场照片等）示例：["images/public2_1.jpg"]，留空 [] 自动隐藏 -->
+      <div class="photo-grid" data-images="[]"></div>
+    </div>
   </details>
 </section>
 
@@ -507,6 +644,16 @@
 </footer>
 
 <button id="backTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<!-- ===== Lightbox 大图预览容器 ===== -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()" aria-label="关闭">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev" onclick="lbPrev()" aria-label="上一张">‹</button>
+  <div class="lb-stage" onclick="lbToggleZoom()"><img id="lbImg" src="" alt="大图预览"></div>
+  <button class="lb-nav lb-next" id="lbNext" onclick="lbNext()" aria-label="下一张">›</button>
+  <div class="lb-count" id="lbCount"></div>
+  <div class="lb-hint">点击图片放大 / 关闭 · ← → 切换 · Esc 退出</div>
+</div>
 
 <script>
   // 导航栏滚动效果
@@ -575,6 +722,95 @@
   // 回到顶部
   const backTop = document.getElementById('backTop');
   window.addEventListener('scroll', () => backTop.classList.toggle('show', window.scrollY > 600));
+
+  /* ============================================================
+     实践图片网格渲染（新增功能）
+     原理：读取每个 .photo-grid 容器上 data-images 属性中的图片路径数组，
+     动态生成缩略图网格；数组为空时整块自动隐藏。
+     如需添加图片，直接编辑对应条目注释下方的
+     <div class="photo-grid" data-images="[...]"></div> 即可。
+     ============================================================ */
+  document.querySelectorAll('.photo-grid').forEach(grid => {
+    let imgs = [];
+    try { imgs = JSON.parse(grid.dataset.images || '[]'); } catch (e) { imgs = []; }
+    if (!imgs || !imgs.length) return; // 无图片自动隐藏
+    const wrap = document.createElement('div');
+    wrap.className = 'photo-grid-inner';
+    imgs.forEach((src, i) => {
+      const a = document.createElement('a');
+      a.className = 'photo-thumb';
+      a.href = 'javascript:void(0)';
+      a.dataset.src = src;
+      a.setAttribute('title', '查看大图 ' + (i + 1));
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = '实践图片 ' + (i + 1);
+      img.loading = 'lazy';
+      a.appendChild(img);
+      a.addEventListener('click', () => openLightbox(grid, i));
+      wrap.appendChild(a);
+    });
+    grid.appendChild(wrap);
+  });
+
+  /* ============================================================
+     Lightbox 大图预览（新增功能）
+     支持：点击缩略图打开 / 点击图片放大缩小 / 左右箭头切换 /
+     关闭按钮、Esc、点击背景关闭 / 键盘 ← → 切换
+     ============================================================ */
+  let lbImages = [], lbCurrent = 0, lbZoomed = false;
+
+  function openLightbox(grid, idx) {
+    let list = [];
+    try { list = JSON.parse(grid.dataset.images || '[]'); } catch (e) { list = []; }
+    if (!list.length) return;
+    lbImages = list;
+    lbCurrent = idx;
+    lbZoomed = false;
+    updateLightbox();
+    document.getElementById('lightbox').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateLightbox() {
+    const img = document.getElementById('lbImg');
+    img.src = lbImages[lbCurrent];
+    img.classList.remove('zoomed');
+    lbZoomed = false;
+    document.getElementById('lbCount').textContent = (lbCurrent + 1) + ' / ' + lbImages.length;
+    document.getElementById('lbPrev').style.display = lbImages.length > 1 ? 'flex' : 'none';
+    document.getElementById('lbNext').style.display = lbImages.length > 1 ? 'flex' : 'none';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  function lbPrev() {
+    if (!lbImages.length) return;
+    lbCurrent = (lbCurrent - 1 + lbImages.length) % lbImages.length;
+    updateLightbox();
+  }
+
+  function lbNext() {
+    if (!lbImages.length) return;
+    lbCurrent = (lbCurrent + 1) % lbImages.length;
+    updateLightbox();
+  }
+
+  function lbToggleZoom() {
+    const img = document.getElementById('lbImg');
+    lbZoomed = !lbZoomed;
+    img.classList.toggle('zoomed', lbZoomed);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('show')) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowLeft') lbPrev();
+    else if (e.key === 'ArrowRight') lbNext();
+  });
 </script>
 </body>
 </html>
